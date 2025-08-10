@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欣欣的生日贺卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: pink;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Microsoft YaHei', sans-serif;
+            padding: 20px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ffd6e8 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #ffd6e8 0%, transparent 20%);
+        }
+        
+        .title {
+            position: absolute;
+            top: 40px;
+            font-size: 32px;
+            color: #d50045;
+            text-shadow: 0 2px 8px rgba(213, 0, 69, 0.3);
+            letter-spacing: 2px;
+            animation: pulse 2s infinite alternate;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .envelope-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-top: 30px;
+        }
+        
+        .envelope {
+            position: relative;
+            width: 500px;
+            height: 350px;
+            transform: rotate(9deg);
+            box-shadow: 2px 20px 20px rgba(0, 0, 0, .1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fad4bf;
+            margin-top: 40px;
+        }
+        
+        .top {
+            position: absolute;
+            top: -175px;
+            margin-left: 16px;
+            width: 1px;
+            height: 1px;
+            border-top: 175px solid #ff5a7d;
+            border-left: 250px solid transparent;
+            border-right: 250px solid transparent;
+            border-bottom: 175px solid transparent;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.6s ease;
+        }
+        
+        .top.open {
+            transform: rotate(-180deg);
+            transform-origin: center 0;
+        }
+        
+        .top::before {
+            display: block;
+            position: absolute;
+            filter: brightness(1.1);
+            content: '';
+            top: -4px;
+            left: 8px;
+            width: 1px;
+            height: 1px;
+            border-top: 175px solid #fad4bf;
+            border-left: 250px solid transparent;
+            border-right: 250px solid transparent;
+            border-bottom: 175px solid transparent;
+        }
+        
+        .content {
+            position: absolute;
+            transition: 1.2s;
+            line-height: 1.7;
+            padding: 2em;
+            background: white;
+            width: 95%;
+            height: 90%;
+            opacity: 0;
+            font-size: 16px;
+            color: #333;
+            border-radius: 4px;
+            overflow-y: auto;
+            z-index: 5;
+        }
+        
+        .content.show {
+            opacity: 0.95;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 60px;
+            color: red;
+            text-shadow: 2px 2px 20px rgba(255, 0, 0, .5);
+            animation: scale 0.6s infinite alternate;
+            z-index: 2;
+            cursor: pointer;
+        }
+        
+        .heart.fade {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .signature {
+            margin-top: 15px;
+            text-align: right;
+            font-style: italic;
+            color: #ff5a7d;
+            font-weight: bold;
+        }
+        
+        @keyframes scale {
+            100% {
+                transform: scale(1.2);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 2px 8px rgba(213, 0, 69, 0.3);
+            }
+            100% {
+                transform: scale(1.05);
+                text-shadow: 0 4px 12px rgba(213, 0, 69, 0.5);
+            }
+        }
+        
+        .date-note {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #d50045;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 24px;
+                top: 20px;
+            }
+            
+            .envelope {
+                transform: rotate(9deg) scale(0.9);
+            }
+            
+            .date-note {
+                font-size: 16px;
+                top: 100px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .envelope {
+                width: 95%;
+                height: 300px;
+                transform: rotate(6deg) scale(0.8);
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .content {
+                font-size: 14px;
+                padding: 1.5em;
+            }
+            
+            .date-note {
+                font-size: 14px;
+                top: 90px;
+            }
+            
+            .heart {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <h1 class="title">写给萌萌的欣欣</h1>
+    
+    <div class="date-note">
+        今天是2025年8月10日的中午，突然想到再过两天有一个特别的日子——我们萌萌的星星要过生日啦！
+    </div>
+    
+    <div class="envelope-container">
+        <div class="envelope">
+            <div class="top" id="envelopeTop"></div>
+            <span class="heart" id="heart">❤</span>
+            <div class="content" id="content">
+                <p id="messageText"></p>
+                <p class="signature">—— 爱你的浩浩</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const heart = document.getElementById('heart');
+        const content = document.getElementById('content');
+        const messageText = document.getElementById('messageText');
+        const envelopeTop = document.getElementById('envelopeTop');
+        const starsContainer = document.getElementById('stars');
+        
+        // 生日祝福全文
+        const fullMessage = `现在是8月10日的中午，突然想到再过两天有一个特别的日子呢，那是什么呢？就是我们萌萌的欣欣要过生日啦。
+还有两天呢，感觉时间突然变得软绵绵的了呢，既想快点到那一天，想把我的祝福快点发给你 ，或许你会开心一些吧 ，又有点怕我们星星看完又会哭哭。又想让这两天慢一点呢，想多写一些话给你听。好啦，不过不管怎样，欣欣的专属小作文正在赶工中呦，我们萌萌的欣欣 就等着拆开这份，轻薄又特别的礼物叭。
+时光匆匆，不知不觉间，我们欣欣的生日就到啦，虽然我们才认识不到三个月啦，但是我对你的感情真的好深好深。这次是第1次陪我们欣欣过生日啦，真的好开心哦,希望每个生日我都能陪你过呢，过完这次生日，我们欣欣就17岁啦，就成大欣欣啦，不管你多大，我都会把你当做我的小朋友 宽容你呵护你的，你都长大一岁啦 我们该懂懂事了，别总是做伤害自己的事啦，别天天咬你的手了，手都被你咬肿了还咬，咬也不知道轻点，我学你咬手，是想让你不咬手，我怕你疼，才这样逼你的，这些都不怪你的，不许打自己脸了，听到没有，也不许像之前一样拿刀伤害自己，你给我好好对自己，你要一直陪着我，你不能出事 你要一直陪着我好不好。看到你这样，我真的很心疼你哒 你给我好好对自己 对了，我有时候说话可能太冲了，然后我就伤害到你了，在这里向你道歉，对不起欣欣 我真的不是故意的，可能有时候心情不好吧，或者嘴比脑子快，没有想过你的感受，希望你能原谅我。我真的一点都不想失去你，没了你，我真的好难受。还有别总说自己不好了，你真的是一个很好的女孩子 有些事情不完全是你的错呀 ，你是一个善良 风趣幽默 为别人着想 真淳朴素的女孩子，都没想到你生日都只要个小作文，叫你买奶茶，你还半天不收，你真的好真纯，相信我，你真的很好的，还有，每个人都是有优缺点的，没有任何一个人是完美的，别总抓着你，细小的缺点不放，况且我都没发现你的缺点，你说的那些算什么缺点 明明就很正常的好不好。你长得也真的好美，萌萌的很可爱  不用减你的肥啦，你这根本就一点都不胖 性格又好长得又好看这怎么不是一个很好的女孩呢，还有呀，心里不开心和有事跟我说好不好 别藏在心里了，别把自己憋坏啦 我都会宽容对你的 天天开心好不好 对了我还得谢谢你接纳满身是缺点的我，也没有嫌弃我，还就像星星一样一直陪着我，我真的好开心好开心的，我明明长得就很一般，你还非说我好看，真的让我好开心，有你真好，欣欣。可能有些说的你会不开心吧，但是这句我还是要说，少跟阿姨闹啦，可能真的是在为你着想，不想让你玩手机，是怕你眼睛不好，也有我的一份错叭，上次给你发定制微，你才跟阿姨吵的，然后熬夜还是我非要让你陪我，挺对不起你和阿姨的。以后跟阿姨好好生活好不好。
+好啦，最后要祝福我们的欣欣啦，在新的一岁里面，我们欣欣要幸福快乐的成长呀，别总是流泪啦，总把你眼睛哭肿 给我快乐一点，祝我们欣欣幸福快乐的成长，记得要按时吃饭别把胃饿坏了，不需要减肥你一点都不胖，然后呢，要照顾好自己 不要做伤害自己的事啦，乖乖的听话好不好嘛，最后祝我们欣欣生日快乐啦！`;
+        
+        // 创建满天星效果
+        function createStars() {
+            const starsCount = 60;
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 3 + 1}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 点击心形图标时展开信封
+        heart.addEventListener('click', openEnvelope);
+        envelopeTop.addEventListener('click', openEnvelope);
+        
+        // 展开信封函数
+        function openEnvelope() {
+            // 添加打开效果
+            envelopeTop.classList.add('open');
+            
+            // 隐藏心形图标
+            heart.classList.add('fade');
+            
+            // 显示内容区域
+            setTimeout(() => {
+                content.classList.add('show');
+                
+                // 逐字显示文本内容
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (i <= fullMessage.length) {
+                        messageText.textContent = fullMessage.substring(0, i);
+                        content.scrollTop = content.scrollHeight; // 自动滚动到底部
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, 25); // 加快一些显示速度
+            }, 500);
+        }
+        
+        // 初始化星星
+        createStars();
+    </script>
+</body>
+</html>
